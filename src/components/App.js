@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Axios from "axios";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
@@ -6,6 +7,17 @@ import CreateArea from "./CreateArea";
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const [userTypes, setUserTypes] = useState([])
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await Axios.get('http://localhost:3001/user-types')
+      setUserTypes(response.data.userTypes)
+    }
+    fetchData();
+  }, [])
+
+
 
   function addNote(newNote) {
     setNotes((prevNotes) => {
@@ -20,6 +32,8 @@ function App() {
       });
     });
   }
+
+  console.log(userTypes)
 
   return (
     <div>
@@ -37,6 +51,9 @@ function App() {
         );
       })}
       <Footer />
+      {userTypes.map(user => {
+        return <div>{user.userType}</div>
+      })}
     </div>
   );
 }
